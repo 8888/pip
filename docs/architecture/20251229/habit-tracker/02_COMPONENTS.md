@@ -20,6 +20,7 @@ This document provides details on each component of the architecture.
     *   **Operations:** Create operations that map to the backend functions (e.g., `GET /habits`, `POST /habits`, `GET /habits/{id}`).
     *   **Backend:** The backend for these operations will be the Azure Function App.
     *   **CORS:** Configure a Cross-Origin Resource Sharing (CORS) policy to allow requests from the Static Web App's domain.
+*   **Note on Simplicity:** While APIM represents a production-ready best practice, a simpler alternative for a hobby project is to link the Static Web App directly to the Azure Function App. The Static Web App can still proxy requests to `/api/*`, providing a simpler setup at the cost of losing the advanced features of APIM (like custom policies, advanced caching, and a single management plane for multiple APIs).
 
 ## 3. Azure Functions
 
@@ -33,7 +34,7 @@ This document provides details on each component of the architecture.
         *   `GetHabitById`: Handles `GET /habits/{id}`.
         *   `UpdateHabit`: Handles `PUT /habits/{id}`.
         *   `DeleteHabit`: Handles `DELETE /habits/{id}`.
-    *   **Application Settings:** The connection string for Cosmos DB will be stored securely in the Function App's application settings.
+    *   **Application Settings:** The connection string for Cosmos DB will be stored securely in **Azure Key Vault**, and the Function App will be configured with a Key Vault Reference to access it. This avoids exposing the raw connection string in the Function App's settings.
 
 ## 4. Azure Cosmos DB (API for MongoDB)
 
@@ -43,4 +44,4 @@ This document provides details on each component of the architecture.
     *   **Capacity Mode:** Serverless. This is crucial for keeping costs low on a hobby project.
     *   **Database:** A database named `HabitTracker`.
     *   **Collection:** A collection named `habits` to store the habit documents.
-    *   **Networking:** For simplicity, the database will be accessible from all Azure services. For a production application, we would lock this down to only allow access from the Function App's IP address.
+    *   **Networking:** For simplicity, the database will be accessible from all Azure services. For a production application, you would lock this down using a **private endpoint** or **service endpoint** to ensure it is only accessible from within your virtual network, providing a much higher level of security.

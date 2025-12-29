@@ -23,9 +23,9 @@ graph TD
 
     A -- "1. Accesses HTML/JS Frontend" --> B
     B -- "2. Authenticates User" --> B
-    B -- "3. Makes API Call (e.g., /api/habits)" --> C
-    C -- "4. Forwards Request" --> D
-    D -- "5. Reads/Writes Data" --> E
+    B -- "3. Makes API Call (e.g., GET /api/habits)" --> C
+    C -- "4. Forwards Request to Function" --> D
+    D -- "5. Reads/Writes Habit Data" --> E
 
     style B fill:#0078D4,stroke:#333,stroke-width:2px,color:#fff
     style C fill:#0078D4,stroke:#333,stroke-width:2px,color:#fff
@@ -37,9 +37,9 @@ graph TD
 
 1.  **User Interaction:** The user opens the web application in their browser.
 2.  **Authentication:** The Azure Static Web App service intercepts the request. If the user is not logged in, it handles the authentication flow with the configured provider (e.g., GitHub, Microsoft). Once authenticated, the user's identity is securely available to the application.
-3.  **API Request:** The client-side JavaScript makes an API call to a defined endpoint (e.g., `/api/habits`) to fetch or modify data. This request is directed to Azure API Management.
+3.  **API Request:** The client-side JavaScript makes an API call to a defined endpoint (e.g., `GET /api/habits`) to fetch or modify data. This request is directed to Azure API Management.
 4.  **API Gateway:** Azure API Management receives the request. It validates the request and forwards it to the appropriate Azure Function that handles the business logic.
-5.  **Business Logic & Data Persistence:** The Azure Function (written in Kotlin) executes the business logic. It connects to the Azure Cosmos DB instance using the MongoDB connection string to perform the required database operations (e.g., find, insert, update).
+5.  **Business Logic & Data Persistence:** The Azure Function (written in Kotlin) executes the business logic. It connects to the Azure Cosmos DB instance using a secure reference to the MongoDB connection string (from Azure Key Vault) to perform the required database operations (e.g., find, insert, update).
 6.  **Response:** The data flows back through the same components to the user's browser, which then updates the UI.
 
 ## 4. Key Design Decisions
