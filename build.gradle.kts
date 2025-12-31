@@ -32,7 +32,9 @@ azurefunctions {
     appName = "pip-tracker"
     pricingTier = "Consumption"
     region = "westus"
-    runtimeOs = "linux"
-    runtimeJavaVersion = "17"
+    runtime {
+        os.set("linux")
+        javaVersion.set("17")
+    }
     localDebug = "transport=dt_socket,server=y,suspend=n,address=5005"
 }
