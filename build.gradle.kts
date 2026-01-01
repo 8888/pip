@@ -1,3 +1,5 @@
+version = "1.0.0"
+
 plugins {
     val kotlinVersion = "1.9.22"
     id("org.jetbrains.kotlin.jvm") version kotlinVersion
