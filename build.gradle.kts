@@ -22,7 +22,7 @@ dependencies {
 azurefunctions {
     appName = "pip-tracker"
     resourceGroup = "pip-rg"
-    region = "westus"
+    region = "canadacentral"
     // runtime configuration removed for now
     localDebug = "transport=dt_socket,server=y,suspend=n,address=5005"
 }

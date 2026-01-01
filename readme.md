@@ -54,3 +54,12 @@ If the process hangs or you need to stop it manually:
    ```bash
    kill -9 <PID>
    ```
+
+## Deployment
+
+### GitHub Actions
+This project uses GitHub Actions for continuous deployment.
+
+- **Pipeline:** `.github/workflows/deploy.yml`
+- **Trigger:** Automatic deployment to Azure on every push to the `main` branch.
+- **Secret Required:** `AZURE_FUNCTIONAPP_PUBLISH_PROFILE` must be configured in the GitHub repository secrets.
