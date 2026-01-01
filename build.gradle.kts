@@ -21,7 +21,7 @@ dependencies {
 
 azurefunctions {
     appName = "pip-tracker"
-    resourceGroup = "java-functions-group"
+    resourceGroup = "pip-rg"
     region = "westus"
     // runtime configuration removed for now
     localDebug = "transport=dt_socket,server=y,suspend=n,address=5005"
