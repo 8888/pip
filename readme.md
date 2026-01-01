@@ -21,3 +21,36 @@
                                              +++-.       -++-.                                            
                                           .++++.          .++++.                                          
                                           .-+++            +++-.                                          
+
+## Local Development
+
+### Prerequisites
+- Java 21
+- Gradle (wrapper provided)
+
+### Running the Function
+To start the Azure Functions host locally:
+```bash
+./gradlew azureFunctionsRun
+```
+
+The function will be available at: `http://localhost:7071/api/hello`
+
+### Managing the Process (macOS)
+If the process hangs or you need to stop it manually:
+
+1. **Find the Process ID (PID):**
+   Check for processes listening on port 7071:
+   ```bash
+   lsof -i :7071
+   ```
+   Or search for the Java process:
+   ```bash
+   ps aux | grep java
+   ```
+
+2. **Kill the Process:**
+   Use the PID found in the previous step:
+   ```bash
+   kill -9 <PID>
+   ```

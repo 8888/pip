@@ -44,6 +44,7 @@ Thumbs.db
 *.publishsettings
 *.sublime-project
 *.sublime-workspace
+local.settings.json
 
 # Gradle wrapper
 !gradle/wrapper/gradle-wrapper.jar
