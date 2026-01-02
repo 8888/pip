@@ -21,8 +21,9 @@ The following resources are currently deployed on Azure. Note the split across r
 | **pip-cosmos** | Cosmos DB Account | `eastus` | **NoSQL (Core) API**, Serverless capacity mode. |
 | **pip-vault** | Key Vault | `eastus` | For managing secrets. |
 | **Pip-api** | API Management | `canadacentral` | Consumption Tier. |
+| **Pip-web-app** | Static Web App | `eastus2` | Free Tier. Frontend hosting. |
 
-*Note: Azure Static Web App is not currently deployed.*
+*Note: Infrastructure is fully deployed.*
 
 ## Getting Started
 
@@ -44,15 +45,17 @@ If the local process hangs on port 7071:
 
 ## Project Structure
 - **`src/main/kotlin/.../FunctionApp.kt`**: Main entry point containing Azure Function triggers.
+- **`client/`**: Frontend assets (HTML, JS, ASCII frames).
+- **`generate_frames.py`**: Tool for generating/aligning mascot animation frames.
 - **`build.gradle.kts`**: Project dependencies and build configuration.
 - **`host.json`**: Global configuration options for all functions in the function app.
 - **`local.settings.json`**: (Excluded from git) Environment variables and connection strings for local development.
 - **`docs/architecture/`**: Detailed architectural documentation and diagrams.
 
 ## Architecture
-The system follows a serverless architecture, though currently only the backend and data layer are deployed:
-1.  **Frontend**: Azure Static Web App (Vanilla JS) - *Planned/Not Deployed*.
-2.  **API Gateway**: Azure API Management - *Planned/Not Deployed*.
+The system follows a serverless architecture, with all major components currently deployed:
+1.  **Frontend**: Azure Static Web App (Vanilla JS) - *Deployed (Pip-web-app)*. Includes animated ASCII mascot.
+2.  **API Gateway**: Azure API Management - *Deployed (Pip-api)*.
 3.  **Backend**: Azure Functions (deployed `pip-tracker`).
 4.  **Database**: Azure Cosmos DB (deployed `pip-cosmos` as NoSQL/Core API).
 
