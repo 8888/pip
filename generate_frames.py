@@ -1,6 +1,5 @@
-
 def generate():
-    with open('client/mascot/frames/neutral.txt', 'r') as f:
+    with open('client/mascot/frames/neutral.txt', 'r', encoding='utf-8') as f:
         lines = [line.rstrip('\n') for line in f]
 
     # Ensure all lines are same length (pad with spaces)
@@ -48,11 +47,11 @@ def generate():
         down_lines.append(left_wing + body + right_wing)
 
     # Write outputs
-    with open('client/mascot/frames/up.txt', 'w') as f:
+    with open('client/mascot/frames/up.txt', 'w', encoding='utf-8') as f:
         for line in up_lines:
             f.write(line + '\n')
             
-    with open('client/mascot/frames/down.txt', 'w') as f:
+    with open('client/mascot/frames/down.txt', 'w', encoding='utf-8') as f:
         for line in down_lines:
             f.write(line + '\n')
 
