@@ -12,7 +12,7 @@ This file controls the behavior of the Azure Static Web App runtime.
 
 #### Route Definition:
 - `route`: `/*`
-- `allowedRoles`: `["authenticated"]`
+- `allowedRoles`: `["granted"]`
 
 ## File Organization
 - `staticwebapp.config.json`: New configuration file in the project root.
