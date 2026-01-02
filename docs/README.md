@@ -8,3 +8,4 @@ This directory contains the project documentation, architectural designs, and fe
 
 ## Features
 - [Automate Azure Deployment](features/automate-azure-deployment/implementation/README.md)
+- [Animate ASCII Bat Mascot](features/animate-ascii-mascot/implementation/README.md)
