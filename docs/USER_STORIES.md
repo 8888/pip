@@ -14,4 +14,18 @@
 4.  The workflow sets up the Java 21 environment.
 5.  The workflow executes `./gradlew clean build` to compile the code and run unit tests.
 6.  Upon a successful build, the workflow deploys the artifact to the `pip-tracker` Azure Function.
-7.  Deployment authentication is handled securely using the `AZURE_FUNCTIONAPP_PUBLISH_PROFILE` GitHub secret.
+1.  Deployment authentication is handled securely using the `AZURE_FUNCTIONAPP_PUBLISH_PROFILE` GitHub secret.
+
+## User Story 2: Animate ASCII Bat Mascot
+
+**As a** Visitor,
+**I want** to see the ASCII bat mascot animated
+**So that** the application feels more alive and engaging.
+
+**Acceptance Criteria:**
+
+1.  The existing static ASCII art in `client/index.html` is replaced with a dynamic element.
+2.  A JavaScript loop cycles through at least 3 distinct ASCII frames (e.g., wings level, wings up, wings down) to create a flapping animation.
+3.  The animation plays continuously on a loop.
+4.  The visual style remains consistent with the current "pip" bat mascot.
+
