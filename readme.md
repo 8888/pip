@@ -1,6 +1,8 @@
 ### Pip  
 [pip.finnminn.com](https://pip.finnminn.com)
 
+**Note: Access to the web application requires authentication via GitHub.**
+
 ![Pip Banner](docs/assets/banner.svg)
 
 ## API Usage
