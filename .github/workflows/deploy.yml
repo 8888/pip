@@ -4,6 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'src/**'
+      - 'gradle/**'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
+      - 'gradlew'
+      - 'gradlew.bat'
+      - 'host.json'
+      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
 env:
