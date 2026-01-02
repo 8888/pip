@@ -2,14 +2,17 @@
 const CONFIG = {
     FRAMES_DIR: 'mascot/frames/',
     FRAME_FILES: ['neutral.txt', 'up.txt', 'down.txt'],
-    SEQUENCE: [0, 1, 0, 2], // Neutral -> Up -> Neutral -> Down
-    INTERVAL_MS: 100
+    // 0: Neutral, 1: Up, 2: Down
+    FLAP_SEQUENCE: [1, 0, 2, 0], 
+    INTERVAL_MS: 100,
+    DELAY_MIN: 1000,
+    DELAY_MAX: 5000,
+    CYCLES_MIN: 1,
+    CYCLES_MAX: 3
 };
 
 // State
 let frames = [];
-let currentStep = 0;
-let animationInterval = null;
 
 /**
  * Fetches a single text file.
@@ -32,33 +35,67 @@ async function loadFrames() {
         const promises = CONFIG.FRAME_FILES.map(file => fetchFrame(file));
         frames = await Promise.all(promises);
         console.log('Mascot frames loaded successfully.');
-        startAnimation();
+        runBehaviorLoop();
     } catch (error) {
         console.error('Error loading mascot frames:', error);
-        // Fallback: Do nothing, leave the static ASCII art.
     }
 }
 
 /**
- * Updates the mascot DOM element with the current frame.
+ * Sets the mascot content to a specific frame index.
+ * @param {number} index 
  */
-function updateMascot() {
+function setFrame(index) {
     const mascotElement = document.getElementById('mascot');
-    if (!mascotElement) return;
-
-    const frameIndex = CONFIG.SEQUENCE[currentStep];
-    mascotElement.textContent = frames[frameIndex];
-
-    // Advance step, looping back to 0 if at the end
-    currentStep = (currentStep + 1) % CONFIG.SEQUENCE.length;
+    if (mascotElement && frames[index]) {
+        mascotElement.textContent = frames[index];
+    }
 }
 
 /**
- * Starts the animation loop.
+ * Returns a random integer between min and max (inclusive).
  */
-function startAnimation() {
-    if (animationInterval) clearInterval(animationInterval);
-    animationInterval = setInterval(updateMascot, CONFIG.INTERVAL_MS);
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/**
+ * Sleep for a given number of milliseconds.
+ */
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Performs a single flap cycle (Up -> Neutral -> Down -> Neutral).
+ */
+async function flapOnce() {
+    for (const frameIndex of CONFIG.FLAP_SEQUENCE) {
+        await sleep(CONFIG.INTERVAL_MS);
+        setFrame(frameIndex);
+    }
+}
+
+/**
+ * Main behavior loop: Wait -> Flap -> Repeat.
+ */
+async function runBehaviorLoop() {
+    while (true) {
+        // 1. Wait for a random duration
+        const delay = getRandomInt(CONFIG.DELAY_MIN, CONFIG.DELAY_MAX);
+        await sleep(delay);
+
+        // 2. Determine number of flaps
+        const cycles = getRandomInt(CONFIG.CYCLES_MIN, CONFIG.CYCLES_MAX);
+
+        // 3. Perform flaps
+        for (let i = 0; i < cycles; i++) {
+            await flapOnce();
+        }
+        
+        // Ensure we end on Neutral (redundant if sequence ends on 0, but good for safety)
+        setFrame(0);
+    }
 }
 
 // Initialize on load
