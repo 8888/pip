@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pip - Habit Tracker</title>
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        pre {
+            font-size: 10px;
+            line-height: 10px;
+            color: #58a6ff;
+        }
+        #api-result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            background-color: #161b22;
+            max-width: 80%;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <pre>
+              --++++---.   ++                                        -+   .---++++--                  
+      -++++++++++++++#####+++-                                      -+++####+++++++++++++++-          
+   .++------------+###+++-+#++-                                    -+++#-++++##+-------------+.       
+ .#-----------+++--------+#+++++.        .++.        .++.        .+++--#+--------+++-----------+.     
+-----------++-----------+++---+#+-.       -+#++++-+++#+-       .-+#+---+++-----------++-----------    
+      .--++-------------++---+-++++--      -++-++++-+++      ---+++-+---+#--------------+--.          
+        ++-------------++-------+#++---.   -++++++++++-   .---++#+-------++-------------++            
+               .------++---------+#++++++++##++++++++##++++++++#+---------++------.                   
+                 .----+------------++#++++++++##++##++++++++#++------------+----.                     
+                   ---+---------------+++##++++++++++++##+++---------------+---                       
+                    -+-------------------++##++++++++##++-------------------+-                        
+                     -.     --------------++#+++++++++++--------------     .-                         
+                               .-----------+#++++++++++-----------.                                   
+                                  ---------++++++++++#+---------                                      
+                                    -------+#++++++++++-------                                        
+                                     -----++++++++++++++-----                                         
+                                      .---+++#+++-++#+++----                                          
+                                       .--++++.    .-+++--.                                           
+                                         +++-.       -++-.                                            
+                                      .++++.          .++++.                                          
+                                      .-+++            +++-.                                          
+    </pre>
+    <h1>Pip</h1>
+    <div id="api-result">Loading API status...</div>
+
+    <script>
+        const apiUrl = 'https://pip-api.azure-api.net/pip-tracker/hello';
+        
+        async function checkApi() {
+            const resultDiv = document.getElementById('api-result');
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const text = await response.text();
+                resultDiv.textContent = `API Response: ${text}`;
+                resultDiv.style.color = '#7ee787'; // Green for success
+            } catch (error) {
+                console.error("API Call failed:", error);
+                resultDiv.textContent = `Error calling API: ${error.message}`;
+                resultDiv.style.color = '#ff7b72'; // Red for error
+            }
+        }
+
+        checkApi();
+    </script>
+</body>
+</html>
