@@ -43,6 +43,7 @@
             const promises = CONFIG.FRAME_FILES.map(file => fetchFrame(file));
             frames = await Promise.all(promises);
             console.log('Mascot frames loaded successfully.');
+            setFrame(0);
             runBehaviorLoop();
         } catch (error) {
             console.error('Error loading mascot frames:', error);
