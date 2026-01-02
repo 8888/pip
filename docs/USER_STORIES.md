@@ -29,22 +29,21 @@
 3.  The animation plays continuously on a loop.
 4.  The visual style remains consistent with the current "pip" bat mascot.
 
-## User Story 3: Enforce Restricted Authentication for Web App
+## User Story 3: Enforce Authentication for Web App
 
-**As a** Owner,
-**I want** to restrict access to the Pip web application to only specifically invited users,
-**So that** only authorized individuals can use the tool and view the data.
+**As a** User,
+**I want** to be required to log in before accessing the Pip web application,
+**So that** my usage and data remain private and unauthorized users cannot access the tool.
 
 **Acceptance Criteria:**
 
 1.  Accessing the root URL (`/`) or any sub-path without an active session blocks access or redirects the user to login.
-2.  Users can authenticate using GitHub.
-3.  **Only users assigned the custom role `granted` are allowed access to the site content.**
-4.  The application uses the **Azure Static Web Apps Standard Plan** to support custom roles.
-5.  The restriction is implemented via `staticwebapp.config.json`.
+2.  Users can authenticate using at least one default provider (GitHub or Microsoft Entra ID).
+3.  Upon successful authentication, the user is granted access to the `index.html` and associated assets.
+4.  The restriction is implemented via `staticwebapp.config.json` using the built-in `authenticated` role.
 
 **Notes & Tradeoffs:**
-- **Tier Requirement:** This feature requires the **Standard Plan**.
-- **User Management:** Invitations and role assignments (assigning the `granted` role to GitHub handles) are managed manually in the Azure Portal.
-- **Access Control:** Access is restricted to a curated allow-list.
+- **Tier Limitation:** On the Azure Static Web Apps Free Tier, custom roles are not supported.
+- **Access Control:** Access is binary (authenticated or unauthenticated). No granular levels of access are implemented in this scope.
+- **Future Growth:** Granular roles would require upgrading to the Standard plan.
 
