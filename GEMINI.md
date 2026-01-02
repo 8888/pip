@@ -20,8 +20,9 @@ The following resources are currently deployed on Azure. Note the split across r
 | **piprg9b25** | Storage Account | `canadacentral` | Standard_LRS. Used by Function App. |
 | **pip-cosmos** | Cosmos DB Account | `eastus` | **NoSQL (Core) API**, Serverless capacity mode. |
 | **pip-vault** | Key Vault | `eastus` | For managing secrets. |
+| **Pip-api** | API Management | `canadacentral` | Consumption Tier. |
 
-*Note: Azure Static Web App and API Management are not currently deployed.*
+*Note: Azure Static Web App is not currently deployed.*
 
 ## Getting Started
 

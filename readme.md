@@ -22,6 +22,14 @@
                                           .++++.          .++++.                                          
                                           .-+++            +++-.                                          
 
+## API Usage
+
+**Base URL:** `https://pip-api.azure-api.net/pip-tracker`
+
+| Endpoint | Methods | Description |
+| :--- | :--- | :--- |
+| `/hello` | `GET`, `POST` | Basic health check and testing endpoint. |
+
 ## Local Development
 
 ### Prerequisites
