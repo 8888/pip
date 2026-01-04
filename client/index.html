@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <title>Pip</title>
+    <!-- Add MSAL.js -->
+    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.30.0/js/msal-browser.min.js"></script>
     <style>
         body {
             background-color: #0d1117;
@@ -34,6 +36,24 @@
             max-width: 80%;
             white-space: pre-wrap;
         }
+        button {
+            background-color: #238636;
+            color: #ffffff;
+            border: 1px solid rgba(240, 246, 252, 0.1);
+            border-radius: 6px;
+            padding: 5px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2ea043;
+        }
+        #user-info {
+            margin-bottom: 10px;
+            color: #8b949e;
+        }
     </style>
 </head>
 <body>
@@ -59,29 +79,136 @@
                                       .++++.          .++++.                                          
                                       .-+++            +++-.                                          </pre>
     <h1>Pip</h1>
-    <div id="api-result">Loading API status...</div>
+
+    <div id="user-info">Not logged in</div>
+    <button id="login-button" onclick="signIn()">Login</button>
+    <div id="api-result">Waiting for login...</div>
 
     <script>
         const apiUrl = 'https://pip-api.azure-api.net/pip-tracker/hello';
 
-        async function checkApi() {
-            const resultDiv = document.getElementById('api-result');
+        // MSAL Configuration
+        const msalConfig = {
+            auth: {
+                clientId: "5e24adce-63ed-4c99-86d3-d8b4d1dfb211", // Your Application (client) ID
+                authority: "https://login.microsoftonline.com/04c5cb13-f93e-4b35-9779-8764f8376e26", // Your Directory (tenant) ID
+                redirectUri: window.location.origin, // Automatically uses current domain
+            },
+            cache: {
+                cacheLocation: "sessionStorage",
+                storeAuthStateInCookie: false,
+            }
+        };
+
+        const myMSALObj = new msal.PublicClientApplication(msalConfig);
+        let username = "";
+
+        // Request object for login
+        const loginRequest = {
+            scopes: ["User.Read"] // Basic scope to read user profile
+        };
+
+        // Request object for acquiring token for the API
+        // NOTE: If you defined a custom scope like "api://<clientId>/access_as_user", add it here.
+        // If simply using ID tokens or default access, standard scopes might suffice depending on setup.
+        // For custom APIs protected by AAD, usually you request the App ID URI as scope.
+        const tokenRequest = {
+            scopes: ["5e24adce-63ed-4c99-86d3-d8b4d1dfb211/.default"],
+            account: null
+        };
+
+        async function signIn() {
             try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const text = await response.text();
-                resultDiv.textContent = `API Response: ${text}`;
-                resultDiv.style.color = '#7ee787'; // Green for success
+                const loginResponse = await myMSALObj.loginPopup(loginRequest);
+                handleResponse(loginResponse);
             } catch (error) {
-                console.error("API Call failed:", error);
-                resultDiv.textContent = `Error calling API: ${error.message}`;
-                resultDiv.style.color = '#ff7b72'; // Red for error
+                console.error(error);
+                document.getElementById('api-result').textContent = `Login failed: ${error.message}`;
+                document.getElementById('api-result').style.color = '#ff7b72';
             }
         }
 
-        checkApi();
+        function handleResponse(response) {
+            if (response !== null) {
+                username = response.account.username;
+                document.getElementById("user-info").innerText = `Welcome, ${username}`;
+                document.getElementById("login-button").style.display = 'none';
+                tokenRequest.account = response.account;
+
+                // Trigger API call after successful login
+                callApi();
+            } else {
+                 // Check if user is already signed in
+                 const currentAccounts = myMSALObj.getAllAccounts();
+                 if (currentAccounts.length > 0) {
+                     tokenRequest.account = currentAccounts[0];
+                     username = currentAccounts[0].username;
+                     document.getElementById("user-info").innerText = `Welcome, ${username}`;
+                     document.getElementById("login-button").style.display = 'none';
+                     callApi();
+                 }
+            }
+        }
+
+        async function getToken() {
+            try {
+                // Try to get token silently
+                const response = await myMSALObj.acquireTokenSilent(tokenRequest);
+                return response.accessToken;
+            } catch (error) {
+                console.warn("Silent token acquisition failed. Acquiring interactively.");
+                if (error instanceof msal.InteractionRequiredAuthError) {
+                    // Fallback to interaction
+                    const response = await myMSALObj.acquireTokenPopup(tokenRequest);
+                    return response.accessToken;
+                } else {
+                    throw error;
+                }
+            }
+        }
+
+        async function callApi() {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.textContent = "Calling API...";
+            resultDiv.style.color = '#c9d1d9';
+
+            try {
+                const token = await getToken();
+
+                const headers = new Headers();
+                headers.append("Authorization", `Bearer ${token}`);
+                // If you kept the Subscription Key requirement, uncomment and add it here:
+                // headers.append("Ocp-Apim-Subscription-Key", "<YOUR_KEY>");
+
+                const response = await fetch(apiUrl, {
+                    method: "GET",
+                    headers: headers
+                });
+
+                if (!response.ok) {
+                    // Try to read error body if possible
+                    const errorText = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errorText || response.statusText}`);
+                }
+
+                const text = await response.text();
+                resultDiv.textContent = `API Response: ${text}`;
+                resultDiv.style.color = '#7ee787'; // Green
+            } catch (error) {
+                console.error("API Call failed:", error);
+                resultDiv.textContent = `Error calling API: ${error.message}`;
+                resultDiv.style.color = '#ff7b72'; // Red
+            }
+        }
+
+        // Initialize MSAL
+        myMSALObj.initialize().then(() => {
+             // Check if user was previously logged in
+             handleResponse(null);
+        }).catch(e => {
+            console.error(e);
+        });
+
     </script>
     <script src="mascot.js"></script>
 </body>
