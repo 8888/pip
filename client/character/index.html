@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pip // Character Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
+
+    <!-- Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.30.0/js/msal-browser.min.js"></script>
+
+    <!-- Design System Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#0d0208',
+                        crypt: '#1a0b14',
+                        bone: '#fbe9d0',
+                        ash: '#8a7d85',
+                        radical: '#ff0055',
+                        toxic: '#00ff41',
+                        spirit: '#00f2ff',
+                        gloom: '#4b0082',
+                        pip: '#58a6ff',
+                    },
+                    fontFamily: {
+                        pixel: ['"VT323"', 'monospace'],
+                        mono: ['"Space Mono"', 'monospace'],
+                    },
+                    boxShadow: {
+                        'hard': '4px 4px 0px 0px #ff0055',
+                        'hard-green': '4px 4px 0px 0px #00ff41',
+                        'hard-void': '4px 4px 0px 0px #0d0208',
+                    },
+                    animation: {
+                        'blink': 'blink 1s step-end infinite',
+                    },
+                    keyframes: {
+                        blink: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .scanlines {
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.1) 50%,
+                rgba(0,0,0,0.1)
+            );
+            background-size: 100% 4px;
+        }
+        body {
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-void text-bone font-mono selection:bg-toxic selection:text-void flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="border-b-2 border-radical bg-void/95 backdrop-blur z-50 shrink-0 relative">
+        <div class="max-w-6xl mx-auto px-4 md:px-6 py-3 flex justify-between items-center">
+            <!-- Brand -->
+            <div class="flex items-center gap-2">
+                <span class="text-toxic text-xl animate-blink">█</span>
+                <h1 class="font-pixel text-3xl md:text-4xl text-radical uppercase tracking-widest">Pip.exe</h1>
+            </div>
+
+            <!-- Desktop Actions -->
+            <div class="hidden md:flex gap-4 items-center">
+                <span id="username-display" class="text-ash text-xs uppercase tracking-wider">Loading...</span>
+                <button id="logout-btn" onclick="signOut()" class="text-radical border border-radical px-4 py-1 font-bold uppercase tracking-widest hover:bg-radical hover:text-void transition-colors">
+                    [ LOGOUT ]
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex flex-col items-center justify-center p-4 md:p-6 min-h-0 relative gap-6">
+
+        <!-- Character Status -->
+        <div class="w-full max-w-4xl border-2 border-gloom bg-crypt shadow-hard p-6 relative">
+             <div class="absolute -top-3 left-4 bg-void px-2 border-2 border-gloom text-xs text-spirit uppercase">
+                Connection_Status
+            </div>
+            <div class="flex flex-col md:flex-row gap-8 items-center">
+                
+                <!-- Simple Static Pip for now, or we could reuse mascot.js if we want animation here too -->
+                <div class="bg-void border-2 border-pip p-4 shadow-hard-void">
+                     <pre class="font-mono text-[6px] leading-[6px] text-pip">
+              --++++---.   ++               
+      -++++++++++++++#####+++-              
+   .++------------+###+++-+#++-             
+ .#-----------+++--------+#+++++.           
+-----------++-----------+++---+#+-.         
+      .--++-------------++---+-++++--       
+        ++-------------++-------+#++---.    
+               .------++---------+#++++     
+                 .----+------------++#+     
+                   ---+---------------      
+                    -+----------------      
+                     -.     ----------      
+                               .------      
+                                  ----      
+                     </pre>
+                </div>
+
+                <div class="flex-grow w-full">
+                     <h2 class="font-pixel text-3xl text-bone mb-4">Server Response</h2>
+                     
+                     <!-- Terminal Output -->
+                     <div class="bg-void border-2 border-ash p-4 h-48 overflow-y-auto font-mono text-sm relative">
+                         <div id="loading-indicator" class="text-toxic animate-pulse">
+                             > Establishing secure connection...
+                         </div>
+                         <pre id="api-output" class="text-bone hidden whitespace-pre-wrap"></pre>
+                         <div id="error-output" class="text-radical hidden whitespace-pre-wrap"></div>
+                     </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Scripts -->
+    <script src="../auth.js"></script>
+    <script>
+        const apiUrl = 'https://pip-api.azure-api.net/pip-tracker/hello';
+
+        window.addEventListener('load', async () => {
+            await initializeMSAL();
+
+            // 0. Ensure interaction is clear
+            await handleRedirect();
+
+            // 1. Check Auth
+            const user = getAccount();
+            if (!user) {
+                console.log("No user found, redirecting to login...");
+                signIn();
+                return;
+            }
+
+            // 2. Update UI
+            document.getElementById('username-display').textContent = `USER: ${user.username}`;
+
+            // 3. Fetch Data
+            try {
+                const token = await getToken();
+                if (!token) {
+                    throw new Error("Could not acquire access token.");
+                }
+
+                const response = await fetch(apiUrl, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const text = await response.text();
+                
+                // Show Result
+                document.getElementById('loading-indicator').style.display = 'none';
+                const output = document.getElementById('api-output');
+                output.textContent = `> ${text}`;
+                output.classList.remove('hidden');
+
+            } catch (error) {
+                document.getElementById('loading-indicator').style.display = 'none';
+                const errOut = document.getElementById('error-output');
+                errOut.textContent = `> FATAL ERROR: ${error.message}`;
+                errOut.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

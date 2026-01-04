@@ -47,3 +47,27 @@
 - **Access Control:** Access is binary (authenticated or unauthenticated). No granular levels of access are implemented in this scope.
 - **Future Growth:** Granular roles would require upgrading to the Standard plan.
 
+## User Story 4: Character Page and Landing Page Redesign
+
+**As a** User,
+**I want** to access a secured character page and view a styled landing page
+**So that** I can use the application within the new "Cryptid Console" design system and ensure my data is secure.
+
+**Acceptance Criteria:**
+
+1.  **Create `/character` Page:**
+    *   Create `client/character/index.html`.
+    *   Implement authentication checks: if the user is not logged in, redirect them to the landing page (`/`).
+    *   Include a top toolbar following the "Cryptid Console" style guide.
+    *   Move the existing "Test API Call" logic (fetch to `.../hello`) from the landing page to this new page.
+    *   Display the API response on this page.
+
+2.  **Update Landing Page (`client/index.html`):**
+    *   Apply the "Cryptid Console" design system (Tailwind CSS, Fonts, Colors, Scanlines) as defined in `styleguide.html`.
+    *   Display the ASCII Mascot ("Pip").
+    *   Remove the automatic API call.
+    *   Include a "Login" button that triggers the MSAL `loginRedirect` flow, targeting the `/character` page upon success.
+
+3.  **Authentication Implementation:**
+    *   Refactor auth logic to use `loginRedirect` and `handleRedirectPromise` patterns from the reference `auth.js`.
+    *   Ensure the MSAL configuration uses the project's specific Tenant ID (`04c5cb13-f93e-4b35-9779-8764f8376e26`).

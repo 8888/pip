@@ -3,213 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pip // Cryptid Console</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <title>Pip</title>
-    <!-- Add MSAL.js -->
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
+
+    <!-- Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.30.0/js/msal-browser.min.js"></script>
+
+    <!-- Design System Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#0d0208',
+                        crypt: '#1a0b14',
+                        bone: '#fbe9d0',
+                        ash: '#8a7d85',
+                        radical: '#ff0055',
+                        toxic: '#00ff41',
+                        spirit: '#00f2ff',
+                        gloom: '#4b0082',
+                        pip: '#58a6ff',
+                    },
+                    fontFamily: {
+                        pixel: ['"VT323"', 'monospace'],
+                        mono: ['"Space Mono"', 'monospace'],
+                    },
+                    boxShadow: {
+                        'hard': '4px 4px 0px 0px #ff0055',
+                        'hard-green': '4px 4px 0px 0px #00ff41',
+                        'hard-void': '4px 4px 0px 0px #0d0208',
+                    },
+                    animation: {
+                        'blink': 'blink 1s step-end infinite',
+                    },
+                    keyframes: {
+                        blink: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
+        .scanlines {
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.1) 50%,
+                rgba(0,0,0,0.1)
+            );
+            background-size: 100% 4px;
+        }
         body {
-            background-color: #0d1117;
-            color: #c9d1d9;
-            font-family: monospace;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        pre {
-            font-size: min(10px, 1.4vw);
-            line-height: 1.2;
-            color: #58a6ff;
-            margin: 0;
-            width: 100%;
-            text-align: center;
-        }
-        #api-result {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            background-color: #161b22;
-            max-width: 80%;
-            white-space: pre-wrap;
-        }
-        button {
-            background-color: #238636;
-            color: #ffffff;
-            border: 1px solid rgba(240, 246, 252, 0.1);
-            border-radius: 6px;
-            padding: 5px 16px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #2ea043;
-        }
-        #user-info {
-            margin-bottom: 10px;
-            color: #8b949e;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
         }
     </style>
 </head>
-<body>
-    <pre id="mascot">              --++++---.   ++                                        -+   .---++++--                  
-      -++++++++++++++#####+++-                                      -+++####+++++++++++++++-          
-   .++------------+###+++-+#++-                                    -+++#-++++##+-------------+.       
- .#-----------+++--------+#+++++.        .++.        .++.        .+++--#+--------+++-----------+.     
------------++-----------+++---+#+-.       -+#++++-+++#+-       .-+#+---+++-----------++-----------    
-      .--++-------------++---+-++++--      -++-++++-+++      ---+++-+---+#--------------+--.          
-        ++-------------++-------+#++---.   -++++++++++-   .---++#+-------++-------------++            
-               .------++---------+#++++++++##++++++++##++++++++#+---------++------.                   
-                 .----+------------++#++++++++##++##++++++++#++------------+----.                     
-                   ---+---------------+++##++++++++++++##+++---------------+---                       
-                    -+-------------------++##++++++++##++-------------------+-                        
-                     -.     --------------++#+++++++++++--------------     .-                         
-                               .-----------+#++++++++++-----------.                                   
-                                  ---------++++++++++#+---------                                      
-                                    -------+#++++++++++-------                                        
-                                     -----++++++++++++++-----                                         
-                                      .---+++#+++-++#+++----                                          
-                                       .--++++.    .-+++--.                                           
-                                         +++-.       -++-.                                            
-                                      .++++.          .++++.                                          
-                                      .-+++            +++-.                                          </pre>
-    <h1>Pip</h1>
+<body class="bg-void text-bone font-mono selection:bg-toxic selection:text-void flex flex-col">
 
-    <div id="user-info">Not logged in</div>
-    <button id="login-button" onclick="signIn()">Login</button>
-    <div id="api-result">Waiting for login...</div>
+    <!-- Navigation -->
+    <nav class="border-b-2 border-radical bg-void/95 backdrop-blur z-50 shrink-0 relative">
+        <div class="max-w-6xl mx-auto px-4 md:px-6 py-3 flex justify-between items-center">
+            <!-- Brand -->
+            <div class="flex items-center gap-2">
+                <span class="text-toxic text-xl animate-blink">█</span>
+                <h1 class="font-pixel text-3xl md:text-4xl text-radical uppercase tracking-widest">Pip.exe</h1>
+            </div>
 
-    <script>
-        const apiUrl = 'https://pip-api.azure-api.net/pip-tracker/hello';
+            <!-- Desktop Actions -->
+            <div class="hidden md:block">
+                <button id="login-btn" onclick="window.location.href='/character'" class="text-radical border border-radical px-4 py-1 font-bold uppercase tracking-widest hover:bg-radical hover:text-void transition-colors">
+                    [ LOGIN ]
+                </button>
+            </div>
+        </div>
+    </nav>
 
-        // MSAL Configuration
-        const msalConfig = {
-            auth: {
-                clientId: "5e24adce-63ed-4c99-86d3-d8b4d1dfb211", // Your Application (client) ID
-                authority: "https://login.microsoftonline.com/04c5cb13-f93e-4b35-9779-8764f8376e26", // Your Directory (tenant) ID
-                redirectUri: window.location.origin, // Automatically uses current domain
-            },
-            cache: {
-                cacheLocation: "sessionStorage",
-                storeAuthStateInCookie: false,
-            }
-        };
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center p-4 md:p-6 min-h-0 relative">
 
-        const myMSALObj = new msal.PublicClientApplication(msalConfig);
-        let username = "";
+        <!-- Terminal Frame -->
+        <div class="border-2 border-gloom bg-crypt shadow-hard-void w-full max-w-4xl flex flex-col max-h-full overflow-hidden relative z-10">
 
-        // Request object for login
-        const loginRequest = {
-            scopes: ["User.Read"] // Basic scope to read user profile
-        };
+            <!-- Terminal Title Bar -->
+            <div class="bg-gloom px-4 py-1 flex justify-between items-center shrink-0">
+                <span class="text-xs font-pixel uppercase tracking-widest text-bone">viewer.exe - "Pip"</span>
+                <div class="flex gap-2">
+                    <div class="w-2 h-2 bg-bone opacity-50"></div>
+                    <div class="w-2 h-2 bg-bone opacity-50"></div>
+                    <div class="w-2 h-2 bg-radical"></div>
+                </div>
+            </div>
 
-        // Request object for acquiring token for the API
-        // NOTE: If you defined a custom scope like "api://<clientId>/access_as_user", add it here.
-        // If simply using ID tokens or default access, standard scopes might suffice depending on setup.
-        // For custom APIs protected by AAD, usually you request the App ID URI as scope.
-        const tokenRequest = {
-            scopes: ["5e24adce-63ed-4c99-86d3-d8b4d1dfb211/.default"],
-            account: null
-        };
+            <!-- Content Container -->
+            <div class="relative flex-grow flex items-center justify-center bg-void min-h-[300px] overflow-hidden">
+                
+                <!-- Mascot -->
+                <pre id="mascot" class="font-mono text-[8px] md:text-[10px] leading-[8px] md:leading-[10px] text-pip transform scale-[0.6] md:scale-100 origin-center select-none text-center">
+                <!-- ASCII Art injected by mascot.js -->
+                </pre>
 
-        async function signIn() {
-            try {
-                const loginResponse = await myMSALObj.loginPopup(loginRequest);
-                handleResponse(loginResponse);
-            } catch (error) {
-                console.error(error);
-                document.getElementById('api-result').textContent = `Login failed: ${error.message}`;
-                document.getElementById('api-result').style.color = '#ff7b72';
-            }
-        }
+                <!-- Scanline Overlay -->
+                <div class="absolute inset-0 pointer-events-none scanlines opacity-30"></div>
+                
+                <!-- Vignette -->
+                <div class="absolute inset-0 pointer-events-none bg-gradient-to-t from-void/60 to-transparent"></div>
+            </div>
 
-        function handleResponse(response) {
-            if (response !== null) {
-                username = response.account.username;
-                document.getElementById("user-info").innerText = `Welcome, ${username}`;
-                document.getElementById("login-button").style.display = 'none';
-                tokenRequest.account = response.account;
+            <!-- Footer Info -->
+            <div class="p-3 border-t border-gloom flex justify-between items-center bg-void shrink-0">
+                <div class="text-[10px] font-mono text-toxic leading-tight">
+                    PATH: C:/CRYPT/PIP_V1.DAT <br>
+                    STATUS: WAITING_FOR_AUTH
+                </div>
+                <div class="text-spirit font-pixel text-xl animate-pulse">
+                    [ LOCKED ]
+                </div>
+            </div>
+        </div>
 
-                // Trigger API call after successful login
-                callApi();
-            } else {
-                 // Check if user is already signed in
-                 const currentAccounts = myMSALObj.getAllAccounts();
-                 if (currentAccounts.length > 0) {
-                     tokenRequest.account = currentAccounts[0];
-                     username = currentAccounts[0].username;
-                     document.getElementById("user-info").innerText = `Welcome, ${username}`;
-                     document.getElementById("login-button").style.display = 'none';
-                     callApi();
-                 }
-            }
-        }
+    </main>
 
-        async function getToken() {
-            try {
-                // Try to get token silently
-                const response = await myMSALObj.acquireTokenSilent(tokenRequest);
-                return response.accessToken;
-            } catch (error) {
-                console.warn("Silent token acquisition failed. Acquiring interactively.");
-                if (error instanceof msal.InteractionRequiredAuthError) {
-                    // Fallback to interaction
-                    const response = await myMSALObj.acquireTokenPopup(tokenRequest);
-                    return response.accessToken;
-                } else {
-                    throw error;
-                }
-            }
-        }
-
-        async function callApi() {
-            const resultDiv = document.getElementById('api-result');
-            resultDiv.textContent = "Calling API...";
-            resultDiv.style.color = '#c9d1d9';
-
-            try {
-                const token = await getToken();
-
-                const headers = new Headers();
-                headers.append("Authorization", `Bearer ${token}`);
-                // If you kept the Subscription Key requirement, uncomment and add it here:
-                // headers.append("Ocp-Apim-Subscription-Key", "<YOUR_KEY>");
-
-                const response = await fetch(apiUrl, {
-                    method: "GET",
-                    headers: headers
-                });
-
-                if (!response.ok) {
-                    // Try to read error body if possible
-                    const errorText = await response.text();
-                    throw new Error(`HTTP ${response.status}: ${errorText || response.statusText}`);
-                }
-
-                const text = await response.text();
-                resultDiv.textContent = `API Response: ${text}`;
-                resultDiv.style.color = '#7ee787'; // Green
-            } catch (error) {
-                console.error("API Call failed:", error);
-                resultDiv.textContent = `Error calling API: ${error.message}`;
-                resultDiv.style.color = '#ff7b72'; // Red
-            }
-        }
-
-        // Initialize MSAL
-        myMSALObj.initialize().then(() => {
-             // Check if user was previously logged in
-             handleResponse(null);
-        }).catch(e => {
-            console.error(e);
-        });
-
-    </script>
+    <!-- Scripts -->
+    <script src="auth.js"></script>
     <script src="mascot.js"></script>
+    <script>
+        // Init Auth and check if we should redirect
+        window.addEventListener('load', async () => {
+            await initializeMSAL();
+
+            // 1. Handle Login Redirect (User just came back from Microsoft)
+            const newUser = await handleRedirect();
+            if (newUser) {
+                // If they just logged in, complete the flow
+                // Add short delay to ensure LocalStorage persists
+                setTimeout(() => {
+                    window.location.href = "/character";
+                }, 100);
+                return;
+            }
+        });
+    </script>
 </body>
 </html>
