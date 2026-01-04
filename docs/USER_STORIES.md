@@ -47,3 +47,19 @@
 - **Access Control:** Access is binary (authenticated or unauthenticated). No granular levels of access are implemented in this scope.
 - **Future Growth:** Granular roles would require upgrading to the Standard plan.
 
+## User Story 4: Create Character Page
+
+**As a** user,
+**I want** a dedicated `/character` page,
+**So that** I can view my character's statistics and attributes in the Cryptid Console style.
+
+**Acceptance Criteria:**
+
+1.  A new file `client/character.html` is created.
+2.  The page uses the "Cryptid Console" color palette: `#0d0208` (void) for background and `#fbe9d0` (bone) for primary text.
+3.  The layout is mobile-first, stacking elements vertically by default.
+4.  The page includes a character statistics section with placeholder values (e.g., Level, XP, Health).
+5.  All components follow the style guide: sharp corners (0px border-radius), 2px thick borders, and hard shadows.
+6.  A "Back to Home" button/link is provided, styled according to the `components.buttons` specification in the style guide.
+7.  The page includes an ASCII mascot (reusing Pip) styled with the `pip` blue color (`#58a6ff`).
+

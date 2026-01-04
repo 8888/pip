@@ -10,3 +10,4 @@ This directory contains the project documentation, architectural designs, and fe
 - [Automate Azure Deployment](features/automate-azure-deployment/implementation/README.md)
 - [Animate ASCII Bat Mascot](features/animate-ascii-mascot/implementation/README.md)
 - [Enforce Web App Authentication](features/enforce-web-app-auth/implementation/README.md)
+- [Character Page](features/character-page/implementation/README.md)
