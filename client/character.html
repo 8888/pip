@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>Pip - Character</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --void: #0d0208;
+            --crypt: #1a0b14;
+            --bone: #fbe9d0;
+            --ash: #8a7d85;
+            --radical: #ff0055;
+            --toxic: #00ff41;
+            --spirit: #00f2ff;
+            --gloom: #4b0082;
+            --pip: #58a6ff;
+        }
+
+        body {
+            background-color: var(--void);
+            color: var(--bone);
+            font-family: 'Space Mono', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-family: 'VT323', monospace;
+            font-size: 3rem;
+            color: var(--radical);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        pre#mascot {
+            font-size: min(8px, 1.2vw);
+            line-height: 1;
+            color: var(--pip);
+            margin: 0 0 30px 0;
+            text-align: center;
+            user-select: none;
+        }
+
+        .stat-card {
+            background-color: var(--crypt);
+            border: 2px solid var(--gloom);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 8px 8px 0px 0px var(--void);
+            margin-bottom: 40px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--gloom);
+            padding-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--ash);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .stat-value {
+            color: var(--toxic);
+            font-weight: bold;
+        }
+
+        .btn-radical {
+            background-color: var(--radical);
+            color: var(--void);
+            border: none;
+            padding: 12px 24px;
+            font-family: 'Space Mono', monospace;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 4px 4px 0px 0px var(--void);
+            transition: transform 0.1s;
+        }
+
+        .btn-radical:hover {
+            background-color: var(--void);
+            color: var(--radical);
+            outline: 2px solid var(--radical);
+            box-shadow: 4px 4px 0px 0px var(--radical);
+        }
+
+        .btn-radical:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px 0px var(--radical);
+        }
+
+        @media (max-width: 600px) {
+            pre#mascot {
+                transform: scale(0.6);
+            }
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <pre id="mascot">              --++++---.   ++                                        -+   .---++++--                  
+      -++++++++++++++#####+++-                                      -+++####+++++++++++++++-          
+   .++------------+###+++-+#++-                                    -+++#-++++##+-------------+.       
+ .#-----------+++--------+#+++++.        .++.        .++.        .+++--#+--------+++-----------+.     
+-----------++-----------+++---+#+-.       -+#++++-+++#+-       .-+#+---+++-----------++-----------    
+      .--++-------------++---+-++++--      -++-++++-+++      ---+++-+---+#--------------+--.          
+        ++-------------++-------+#++---.   -++++++++++-   .---++#+-------++-------------++            
+               .------++---------+#++++++++##++++++++##++++++++#+---------++------.                   
+                 .----+------------++#++++++++##++##++++++++#++------------+----.                     
+                   ---+---------------+++##++++++++++++##+++---------------+---                       
+                    -+-------------------++##++++++++##++-------------------+-                        
+                     -.     --------------++#+++++++++++--------------     .-                         
+                               .-----------+#++++++++++-----------.                                   
+                                  ---------++++++++++#+---------                                      
+                                    -------+#++++++++++-------                                        
+                                     -----++++++++++++++-----                                         
+                                      .---+++#+++-++#+++----                                          
+                                       .--++++.    .-+++--.                                           
+                                         +++-.       -++-.                                            
+                                      .++++.          .++++.                                          
+                                      .-+++            +++-.                                          </pre>
+
+    <h1>Character</h1>
+
+    <div class="stat-card">
+        <div class="stat-row">
+            <span class="stat-label">Identity</span>
+            <span class="stat-value">Pip the Bat</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Level</span>
+            <span class="stat-value">01</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">XP</span>
+            <span class="stat-value">0 / 100</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Health</span>
+            <span class="stat-value">100%</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Habits Met</span>
+            <span class="stat-value">0</span>
+        </div>
+    </div>
+
+    <a href="index.html" class="btn-radical">Back to Void</a>
+
+    <script src="mascot.js"></script>
+</body>
+</html>
